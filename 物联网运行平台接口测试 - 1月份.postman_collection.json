@@ -1,0 +1,870 @@
+{
+	"info": {
+		"_postman_id": "55d26924-4e7b-4c00-b958-13da916ea047",
+		"name": "物联网运行平台接口测试 - 1月份",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "平台登录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "87d50bc1-3c8b-4c34-8f59-8c24fe2d6f70",
+						"exec": [
+							"// 把responseBody转为json字符串 ",
+							"var Jsondata =JSON.parse(responseBody); ",
+							"",
+							"// 设置环境变量access-token，供后面的接口引用 ",
+							"pm.environment.set(\"authentication_token\", Jsondata.data.authentication_token); ",
+							"",
+							"// 设置环境变量access-token，供后面的接口引用 ",
+							"pm.environment.set(\"current_sign_in_at\", Jsondata.data.current_sign_in_at); ",
+							"",
+							"if(tests[\"登录成功\"] = Jsondata.status === 201){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"有返回message字段\"] = Jsondata.msg === \"登录成功\";",
+							"    tests[\"status is 201\"] = Jsondata.status === 201;",
+							"}",
+							"else if(tests[\"status is 500\"]= Jsondata.status ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= Jsondata.status ===400 ",
+							"}",
+							"",
+							"",
+							"",
+							"//2019-04-16更新",
+							"//检查响应主体是否包含字符串",
+							"pm.test(\"Body matches string,登录成功\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"登录成功\");",
+							"});",
+							"",
+							"//检查JSON值",
+							"pm.test(\"校验JSON值，201\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(Jsondata.status).to.eql(201);",
+							"});",
+							"",
+							"//验证是否含有返回message字段",
+							"if (tests[\"status is 201\"] = Jsondata.status === 201){",
+							"    tests[\"有返回msg字段，登录成功\"] = Jsondata.msg === \"登录成功\" ;",
+							"}",
+							"else {",
+							"    tests[\"有返回msg字段，没有该用户\"] = Jsondata.msg === \"没有该用户\" ;",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "176696c4-42d8-42ba-91bd-afab88f1999a",
+						"exec": [
+							"var nickname = \"gly001\";",
+							"if(data.nickname){",
+							"    nickname = data.nickname",
+							"}",
+							"pm.environment.set(\"nickname\",nickname);",
+							"",
+							"var password = \"123456\";",
+							"if(data.password){",
+							"    telephone = data.password",
+							"}",
+							"pm.environment.set(\"password\",password);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "20190124113233",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "qzxusEX39MF2KX4J3QDZ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nickname",
+							"value": "{{nickname}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://xymind.net:3000/api/staff/login",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"staff",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "xmind登陆记录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "78fc1fd9-038f-4b6b-b490-165bcad07cc9",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"记录成功\"] = d.errorCode === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"有返回message字段\"] = d.message === \"记录成功！\";",
+							"    tests[\"status is 200\"] = d.errorCode === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.errorCode ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.errorCode ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "04bd69cc-b830-43bb-92f9-35ecac2e40b2",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message_type",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "login_time",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "telephone",
+							"value": "{{nickname}}",
+							"type": "text"
+						},
+						{
+							"key": "app_version",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_code",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_type",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "logout_time",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "model_type",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "system_version",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "login_ip",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/login",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "删除未接来电log",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c2eb3f4b-cf45-40cf-bc78-f14b81ff65c0",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"修改成功\"] = d.errorCode === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"有返回message字段\"] = d.message === \"修改成功！\";",
+							"    tests[\"status is 200\"] = d.errorCode === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.errorCode ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.errorCode ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message_log_id",
+							"value": "494",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/del_message_log",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"del_message_log"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "未读消息状态改为已读",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3c5ad48-04bc-4e14-ab73-3bef731d18a9",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"修改成功\"] = d.errorCode === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"有返回message字段\"] = d.message === \"修改成功！\";",
+							"    tests[\"status is 200\"] = d.errorCode === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.errorCode ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.errorCode ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message_log_id",
+							"value": "356",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/change_read_type",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"change_read_type"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "消息读取",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6f0cb501-3f02-4669-8175-e65f6f55f37a",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"登录成功，status is 200\"] = d.status === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"status is 200\"] = d.status === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.status ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.status ===400 ",
+							"}",
+							"",
+							"//要求code名称当中包含某个字符串 status:200 OK",
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"OK\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/message_log_get?message_do_type=99&page=1&per=20",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"message_log_get"
+					],
+					"query": [
+						{
+							"key": "message_do_type",
+							"value": "99"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取所有的未接通未读云对讲信息",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "163a1742-d337-4494-bebc-c076f6f80071",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"获取成功\"] = d.status === 201){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"测试status字段\"] = d.status === 201;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.status ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.status ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/need_read_clound_logs_get?page=1&per=20",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"need_read_clound_logs_get"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "切换项目",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "94690469-dfd3-4324-8649-67311929c87a",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"切换成功，status is 200\"] = d.errorCode === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"有返回message字段\"] = d.message === \"获取项目成功！\";",
+							"    tests[\"测试status字段\"] = d.errorCode === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.errorCode ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.errorCode ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/item_get?item_code=SZ0101",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"item_get"
+					],
+					"query": [
+						{
+							"key": "item_code",
+							"value": "SZ0101"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "未读消息总数",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "72b0ca9f-c983-4b6c-896e-1bc8a2e605ca",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"获取成功\"] = d.errorCode === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"有返回message字段\"] = d.message === \"获取成功！\";",
+							"    tests[\"测试status字段\"] = d.errorCode === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.errorCode ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.errorCode ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://xymind.net:3000/api/xmind_log/message_log_total",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"xmind_log",
+						"message_log_total"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "保存未接和已接通的记录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "62f1688d-d0ee-4be6-bbf1-91ffb1650fb7",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"保存成功\"] = d.status === 200){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"测试status字段\"] = d.status === 200;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.status ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.status ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "uid",
+							"value": "SZ0101-staffweb-gly002",
+							"type": "text"
+						},
+						{
+							"key": "flag",
+							"value": "false",
+							"description": "false表示未接通，true表示接通",
+							"type": "text"
+						},
+						{
+							"key": "answer",
+							"value": "0",
+							"description": "0表示接入，1表示呼出",
+							"type": "text"
+						},
+						{
+							"key": "call_item_code",
+							"value": "SZ0101",
+							"type": "text"
+						},
+						{
+							"key": "start_time",
+							"value": "2019-01-22T13:40:49.000+08:00",
+							"type": "text"
+						},
+						{
+							"key": "end_time",
+							"value": "2019-01-22T13:40:49.000+08:00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://xymind.net:3000/api/clound_asks/save_clound_logs",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clound_asks",
+						"save_clound_logs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取所有的未接通的已接通的记录",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7ec8b04a-e5c2-4353-9011-9cd3f366f697",
+						"exec": [
+							"var d = JSON.parse(responseBody);",
+							"",
+							"if(tests[\"获取成功，status is 201\"] = d.status === 201){",
+							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"测试status字段\"] = d.status === 201;",
+							"}",
+							"else if(tests[\"status is 500\"]= d.status ===500){",
+							"    ",
+							"}",
+							"else{",
+							"    tests[\"status is 400\"]= d.status ===400 ",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://xymind.net:3000/api/clound_asks/clound_logs?flag=false&page=1&per=20",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"clound_asks",
+						"clound_logs"
+					],
+					"query": [
+						{
+							"key": "flag",
+							"value": "false"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
