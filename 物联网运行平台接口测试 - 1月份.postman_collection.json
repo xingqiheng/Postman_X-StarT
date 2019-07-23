@@ -11,19 +11,19 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "87d50bc1-3c8b-4c34-8f59-8c24fe2d6f70",
+						"id": "31258d2c-b59f-4621-b1f9-fe845f36c822",
 						"exec": [
-							"// 把responseBody转为json字符串 ",
-							"var Jsondata =JSON.parse(responseBody); ",
+							"// 把responseBody转为json字符串",
+							"var Jsondata =JSON.parse(responseBody);",
 							"",
-							"// 设置环境变量access-token，供后面的接口引用 ",
-							"pm.environment.set(\"authentication_token\", Jsondata.data.authentication_token); ",
+							"// 设置环境变量access-token，供后面的接口引用",
+							"pm.environment.set(\"authentication_token\", Jsondata.data.authentication_token);",
 							"",
-							"// 设置环境变量access-token，供后面的接口引用 ",
-							"pm.environment.set(\"current_sign_in_at\", Jsondata.data.current_sign_in_at); ",
+							"// 设置环境变量access-token，供后面的接口引用",
+							"pm.environment.set(\"current_sign_in_at\", Jsondata.data.current_sign_in_at);",
 							"",
 							"if(tests[\"登录成功\"] = Jsondata.status === 201){",
-							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"响应的时间小于800 ms\"] = responseTime < 800 ;",
 							"    tests[\"有返回message字段\"] = Jsondata.msg === \"登录成功\";",
 							"    tests[\"status is 201\"] = Jsondata.status === 201;",
 							"}",
@@ -63,7 +63,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "176696c4-42d8-42ba-91bd-afab88f1999a",
+						"id": "ba7bdda3-2b06-4bbb-9fad-967dd2b669a8",
 						"exec": [
 							"var nickname = \"gly001\";",
 							"if(data.nickname){",
@@ -97,6 +97,12 @@
 					{
 						"key": "stafftoken",
 						"value": "qzxusEX39MF2KX4J3QDZ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
 						"type": "text"
 					}
 				],
