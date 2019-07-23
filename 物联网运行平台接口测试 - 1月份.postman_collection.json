@@ -23,7 +23,7 @@
 							"pm.environment.set(\"current_sign_in_at\", Jsondata.data.current_sign_in_at);",
 							"",
 							"if(tests[\"登录成功\"] = Jsondata.status === 201){",
-							"    tests[\"响应的时间小于1200 ms\"] = responseTime < 1200 ;",
+							"    tests[\"响应的时间小于1000 ms\"] = responseTime < 1000 ;",
 							"    tests[\"有返回message字段\"] = Jsondata.msg === \"登录成功\";",
 							"    tests[\"status is 201\"] = Jsondata.status === 201;",
 							"}",
