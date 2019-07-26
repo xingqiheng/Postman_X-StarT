@@ -808,7 +808,7 @@
 							"var d = JSON.parse(responseBody);",
 							"",
 							"if(tests[\"获取成功，status is 201\"] = d.status === 201){",
-							"    tests[\"响应的时间小于500 ms\"] = responseTime < 500 ;",
+							"    tests[\"响应的时间小于900 ms\"] = responseTime < 900 ;",
 							"    tests[\"测试status字段\"] = d.status === 201;",
 							"}",
 							"else if(tests[\"status is 500\"]= d.status ===500){",
@@ -869,6 +869,153 @@
 						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "文件上传---通用多文件上传接口",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8366ec8-39c7-4711-b15c-d4cf482204e7",
+						"exec": [
+							"// 把responseBody转为json字符串",
+							"var Jsondata =JSON.parse(responseBody);",
+							"",
+							"// 设置环境变量access-token，供后面的接口引用",
+							"pm.environment.set(\"url\", Jsondata.result.url);",
+							"",
+							"tests[\"errorCode is 200\"]= Jsondata.errorCode === 200;",
+							"",
+							"tests[\"state is true\"]= Jsondata.state === true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "SZ0101",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files",
+							"type": "file",
+							"src": "/Users/koukihisashi/Desktop/电子档.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://seven.xy-mind.com:8006/ssh/v1/appBase/filesUpload",
+					"protocol": "http",
+					"host": [
+						"seven",
+						"xy-mind",
+						"com"
+					],
+					"port": "8006",
+					"path": [
+						"ssh",
+						"v1",
+						"appBase",
+						"filesUpload"
+					]
+				},
+				"description": "http://seven.xy-mind.com:8006/ssh/v1/appBase/filesUpload"
+			},
+			"response": []
+		},
+		{
+			"name": "业主人脸录入",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c8d61813-fb65-472a-9026-57e76b62158c",
+						"exec": [
+							"// 把responseBody转为json字符串",
+							"var Jsondata =JSON.parse(responseBody);",
+							"",
+							"tests[\"status is 200\"]= Jsondata.status === 200;",
+							"",
+							"tests[\"上传成功\"]= Jsondata.msg === \"上传成功！\";"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "currentstr",
+						"value": "{{current_sign_in_at}}",
+						"type": "text"
+					},
+					{
+						"key": "itemid",
+						"value": "",
+						"type": "text"
+					},
+					{
+						"key": "stafftoken",
+						"value": "{{authentication_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userId",
+							"value": "7d182457-edcc-4d2f-b0e2-d24171a5df41",
+							"type": "text"
+						},
+						{
+							"key": "projectCode",
+							"value": "SZ0101",
+							"type": "text"
+						},
+						{
+							"key": "faceUrl",
+							"value": "{{url}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://xymind.net:3000/api/doormanages/user_pic_up",
+					"protocol": "https",
+					"host": [
+						"xymind",
+						"net"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"doormanages",
+						"user_pic_up"
+					]
+				},
+				"description": "https://xymind.net:3000/api/doormanages/user_pic_up"
 			},
 			"response": []
 		}
